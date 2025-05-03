@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "name": "geoprivacy",
+  "builds": [
+    { "src": "next.config.js", "use": "@vercel/next" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/" }
+  ],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "@geoprivacy_api_url"
+  }
+}

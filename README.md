@@ -1,10 +1,12 @@
-# GeoPrivacy - Zero-Knowledge Location Proof System
+# GeoPrivacy
+
+Location privacy project using Zero-Knowledge Proofs
+
+## 🌍 Project Overview
+
+GeoPrivacy is a cutting-edge application that allows users to generate zero-knowledge proofs of their location without revealing exact coordinates.
 
 ## 🚀 Features
-- Zero-knowledge proof of location
-- Secure authentication with JWT
-- MongoDB storage
-- REST API backend
 - Noir circuits for ZK proofs
 
 ## ⚙️ Setup

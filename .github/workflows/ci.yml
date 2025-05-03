@@ -1,0 +1,62 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    # Backend Tests
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install Backend Dependencies
+      run: |
+        cd src/backend
+        npm ci
+    
+    - name: Run Backend Tests
+      run: |
+        cd src/backend
+        npm test
+    
+    # Frontend Tests
+    - name: Install Frontend Dependencies
+      run: |
+        cd frontend
+        npm ci
+    
+    - name: Run Frontend Tests
+      run: |
+        cd frontend
+        npm test
+    
+    # Noir Circuit Tests
+    - name: Install Noir
+      run: |
+        npm install -g @noir-lang/noir_js
+    
+    - name: Compile and Test Noir Circuits
+      run: |
+        cd frontend
+        npm run noir:compile
+        npm test
+    
+    # Vercel Deployment
+    - name: Deploy to Vercel
+      uses: vercel/action@v2
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: frontend
