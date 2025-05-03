@@ -1,36 +1,59 @@
-import { Noir } from '@noir-lang/noir_js'
-import { BarretenbergBackend } from '@noir-lang/backend_barretenberg'
-import locationProofCircuit from '../circuits/location_proof.nr'
+import { CompiledCircuit } from '@noir-lang/noir_js'
+import { BarretenbergBackend } from '@aztec/bb.js'
+
+// Importation du circuit Noir
+declare module '../circuits/location_proof.nr' {
+  const main: (latitude: number, longitude: number, timestamp: number) => boolean;
+}
 
 describe('Location Proof Circuit', () => {
-  let noir: Noir;
-  let backend: BarretenbergBackend;
+  let backend: any;
 
   beforeAll(async () => {
-    backend = new BarretenbergBackend(locationProofCircuit);
-    noir = new Noir(locationProofCircuit, backend);
+    // Initialisation du backend
+    backend = await BarretenbergBackend.new();
   });
 
-  test('Valid location proof within Paris radius', async () => {
-    const proof = await noir.generateProof({
-      latitude: 48.8566, // Centre de Paris
-      longitude: 2.3522, 
-      timestamp: Date.now()
-    });
+  test('Preuve de localisation à Paris valide', async () => {
+    // Coordonnées proches du centre de Paris
+    const inputs = {
+      latitude: 48.8566,
+      longitude: 2.3522,
+      timestamp: Math.floor(Date.now() / 1000) // Timestamp en secondes
+    };
 
-    const isValid = await noir.verifyProof(proof);
-    expect(isValid).toBe(true);
+    const proof = await backend.generateProof(inputs);
+    const verification = await backend.verifyProof(proof);
+
+    expect(verification).toBe(true);
   });
 
-  test('Invalid location proof outside Paris radius', async () => {
-    const proof = await noir.generateProof({
-      latitude: 49.8966, // Loin de Paris
-      longitude: 3.3922, 
-      timestamp: Date.now()
-    });
+  test('Preuve de localisation hors de Paris invalide', async () => {
+    // Coordonnées loin de Paris
+    const inputs = {
+      latitude: 50.8503,
+      longitude: 4.3517, // Bruxelles
+      timestamp: Math.floor(Date.now() / 1000)
+    };
 
-    const isValid = await noir.verifyProof(proof);
-    expect(isValid).toBe(false);
+    const proof = await backend.generateProof(inputs);
+    const verification = await backend.verifyProof(proof);
+
+    expect(verification).toBe(false);
+  });
+
+  test('Preuve avec timestamp expiré', async () => {
+    // Timestamp très ancien
+    const inputs = {
+      latitude: 48.8566,
+      longitude: 2.3522,
+      timestamp: Math.floor(Date.now() / 1000) - 100000 // Timestamp très ancien
+    };
+
+    const proof = await backend.generateProof(inputs);
+    const verification = await backend.verifyProof(proof);
+
+    expect(verification).toBe(false);
   });
 
   afterAll(async () => {
