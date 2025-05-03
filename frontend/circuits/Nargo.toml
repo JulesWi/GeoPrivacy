@@ -7,6 +7,9 @@ keywords = ["zk", "location", "proof"]
 
 [dependencies]
 
+[lints]
+warnings = "all"
+
 [[bin]]
 name = "location_proof"
 path = "location_proof.nr"
