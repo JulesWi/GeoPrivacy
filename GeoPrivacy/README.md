@@ -20,6 +20,26 @@ GeoPrivacy is an innovative web application that generates zero-knowledge proofs
 
 ## 🌐 Getting Started
 
+## 💰 Payment Model
+
+GeoPrivacy introduces an innovative payment mechanism for Zero-Knowledge Proofs:
+
+- **Network**: OP Sepolia
+- **Proof Generation Cost**: 0.5 USDC
+- **Smart Contract**: `GeoPrivacyPayment.sol`
+
+### How It Works
+
+1. Purchase a proof token via our smart contract
+2. Token is valid for a single ZK proof generation
+3. Secure and traceable blockchain-based payment
+
+### Requirements
+
+- Web3 Wallet compatible with OP Sepolia
+- USDC on OP Sepolia
+- Web3 Connection
+
 ### Prerequisites
 
 - Node.js (v18+)
