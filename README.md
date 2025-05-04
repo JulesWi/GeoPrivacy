@@ -1,6 +1,67 @@
-# GeoPrivacy
+# 🌍 GeoPrivacy: Zero-Knowledge Geolocation Proof System
 
-Location privacy project using Zero-Knowledge Proofs with Noir and Aztec Network
+## 🚀 Overview
+
+GeoPrivacy is an innovative web application that generates zero-knowledge proofs for location verification, ensuring maximum privacy and security.
+
+## ✨ Features
+
+- 🔒 Zero-Knowledge Location Proofs
+- 🗺️ Interactive Map Integration
+- 🛡️ Privacy-First Design
+- 📍 Precise Location Verification
+
+## 🛠 Tech Stack
+
+- **Frontend**: Next.js 14
+- **Styling**: Tailwind CSS
+- **Mapping**: React Leaflet
+- **Zero-Knowledge Proofs**: Noir Circuit
+
+## 🌐 Getting Started
+
+### Prerequisites
+
+- Node.js (v18+)
+- npm
+
+### Installation
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/yourusername/geoprivacy.git
+   ```
+
+2. Install dependencies
+   ```bash
+   cd geoprivacy/frontend
+   npm install
+   ```
+
+3. Run development server
+   ```bash
+   npm run dev
+   ```
+
+## 🚀 Deployment
+
+Deployed on Netlify. Visit [GeoPrivacy App](https://geoprivacy.netlify.app)
+
+## 🔒 Privacy Commitment
+
+We use zero-knowledge proofs to verify location without revealing sensitive data.
+
+## 📄 License
+
+MIT License
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our contributing guidelines.
+
+## 👥 Team
+
+AztecNoir Team - Privacy Innovators project using Zero-Knowledge Proofs with Noir and Aztec Network
 
 ## 🌍 Project Overview
 
