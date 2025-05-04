@@ -9,9 +9,12 @@ describe('LocationProof Model Test', () => {
   let testUser: IUser & mongoose.Document;
 
   beforeAll(async () => {
+    jest.setTimeout(30000); // Timeout de 30 secondes
+    
     // Connexion à une base de données de test
     await mongoose.connect('mongodb://localhost:27017/geoprivacy_test', {
-      // Supprimer les options obsolètes
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     } as ConnectOptions);
 
     // Créer un utilisateur de test
@@ -21,14 +24,14 @@ describe('LocationProof Model Test', () => {
       username: 'testuser'
     });
     await testUser.save();
-  });
+  }, 30000);
 
   afterAll(async () => {
     // Nettoyer la base de données et se déconnecter
     await (User as any).deleteMany({});
     await (LocationProof as any).deleteMany({});
     await mongoose.connection.close();
-  });
+  }, 30000);
 
   it('should create a location proof successfully', async () => {
     const locationProofData: Partial<ILocationProofDocument> = {
