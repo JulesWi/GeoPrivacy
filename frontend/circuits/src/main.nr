@@ -1,9 +1,9 @@
 // Advanced Zero-Knowledge Location Proof Circuit
 
 // Constants for location proof
-field PARIS_LAT = 48.8566;
-field PARIS_LON = 2.3522;
-field MAX_RADIUS = 20.0; // km
+global PARIS_LAT: Field = 48.8566;
+global PARIS_LON: Field = 2.3522;
+global MAX_RADIUS: Field = 20.0; // km
 
 // Custom trigonometric approximation for Field
 fn sin(x: Field) -> Field {
@@ -34,7 +34,7 @@ fn haversine_distance(
         sin(dlon/2) * sin(dlon/2)
     );
     
-    let c = 2 * a.sqrt().asin();
+    let c = 2 * custom_sqrt(a);
     
     R * c
 }
@@ -60,8 +60,7 @@ fn verify_location_proof(
     // Simplified constraints
     let is_within_radius = distance < MAX_RADIUS;
     let is_recent_timestamp = max_timestamp > (max_timestamp - 86400);
-    
-    is_within_radius & is_recent_timestamp
+    if is_within_radius && is_recent_timestamp { true } else { false }
 }
 
 // Main circuit entry point
