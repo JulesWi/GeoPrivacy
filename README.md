@@ -32,7 +32,26 @@ GeoPrivacy is a cutting-edge application that allows users to generate zero-know
 - **Timestamp Verification**: Ensure the proof is recent (within 24 hours)
 - **Privacy-Preserving**: Zero-knowledge proofs reveal nothing about exact coordinates
 
-## ⚙️ Setup and Development
+## ⚙️ Setup and Installation
+
+### Dependency Management
+
+To keep dependencies up to date, use the following scripts:
+
+#### Unix/Linux/macOS
+```bash
+./update_deps.sh
+```
+
+#### Windows
+```powershell
+.\update_deps.ps1
+```
+
+These scripts will:
+- Update npm packages
+- Run npm audit fix
+- Update Noir circuit dependencies
 
 1. **Install Dependencies**:
 ```bash
