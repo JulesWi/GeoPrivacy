@@ -9,4 +9,4 @@ keywords = ["zk", "location", "proof"]
 
 [[bin]]
 name = "location_proof"
-path = "location_proof.nr"
+path = "src/main.nr"
