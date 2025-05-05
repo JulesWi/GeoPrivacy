@@ -39,6 +39,12 @@ export interface ILocationProofDocument extends mongoose.Document, ILocationProo
   timestamp: Date;
   proof: string;
   zeroKnowledgeToken: string;
+  paymentTransaction?: {
+    hash: string;
+    network: string;
+    amount: number;
+    token: string;
+  };
 }
 
 // Define the model type that includes methods

@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "test": "jest",
-    "noir:compile": "cd circuits && nargo compile",
+    "noir:compile": "cd circuits && /root/.nargo/bin/nargo compile",
     "noir:execute": "cd circuits && nargo execute",
     "noir:info": "cd circuits && nargo info"
   },
@@ -35,6 +35,7 @@
   "devDependencies": {
     "@types/geojson": "^7946.0.16",
     "@types/jest": "^29.5.0",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/leaflet": "^1.9.17",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",

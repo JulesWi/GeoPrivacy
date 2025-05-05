@@ -1,0 +1,141 @@
+name: GeoPrivacy CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+    
+    - name: Install Dependencies
+      run: npm ci
+    
+    - name: Lint Code
+      run: npm run lint
+    
+    - name: Run Unit Tests
+      run: npm run test:contracts
+    
+    - name: Generate Coverage Report
+      run: npm run test:contracts:coverage
+    
+    - name: Upload Coverage
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Run Slither Static Analysis
+      uses: crytic/slither-action@v0.3.0
+      with:
+        target: 'contracts/'
+    
+    - name: Mythx Smart Contract Analysis
+      uses: mythx/mythx-ci-github-action@v1
+      with:
+        mythx-api-key: ${{ secrets.MYTHX_API_KEY }}
+
+  deployment-check:
+    needs: [lint-and-test, security-scan]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+    
+    - name: Simulate Deployment
+      run: |
+        npm ci
+        npm run project:validate
+        npm run contract:deploy:dry-run
+
+  vercel-deployment:
+    needs: [deployment-check]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v20
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [vercel-deployment]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+        node-version: '20.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Compile contracts
+      run: npx hardhat compile
+    
+    - name: Run unit tests
+      run: npm run test:contracts
+    
+    - name: Generate coverage report
+      run: npm run test:contracts:coverage
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    
+    - name: Gas reporter
+      run: npm run test:contracts:gas
+      env:
+        REPORT_GAS: true
+
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Run Slither
+      uses: crytic/slither-action@v0.3.0
+      with:
+        solc-version: 0.8.19
+        
+    - name: Mythx Security Scan
+      uses: mythx/mythx-ci-github-action@v1
+      with:
+        mythx-api-key: ${{ secrets.MYTHX_API_KEY }}
+        solc-version: 0.8.19
