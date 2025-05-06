@@ -12,6 +12,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: List GeoPrivacy/frontend directory content
+      run: |
+        echo "Listing GeoPrivacy/frontend:"
+        ls -la GeoPrivacy/frontend || echo "GeoPrivacy/frontend directory not found or ls failed"
+
     - name: Setup Node.js for Frontend
       uses: actions/setup-node@v4
       with:
@@ -23,6 +28,17 @@ jobs:
       working-directory: ./GeoPrivacy/frontend
       run: npm ci
     
+    - name: Display package.json content from GeoPrivacy/frontend
+      working-directory: ./GeoPrivacy/frontend
+      run: |
+        echo "--- Content of GeoPrivacy/frontend/package.json (from Action runner) ---"
+        cat package.json || echo "Failed to cat package.json"
+        echo "---------------------------------------------------------------------"
+        
+    - name: List available npm scripts in GeoPrivacy/frontend
+      working-directory: ./GeoPrivacy/frontend
+      run: npm run || echo "npm run command failed"
+
     - name: Lint Frontend Code
       working-directory: ./GeoPrivacy/frontend
       run: npm run lint
