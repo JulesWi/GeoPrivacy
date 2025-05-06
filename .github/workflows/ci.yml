@@ -56,11 +56,13 @@ jobs:
         NEXT_PUBLIC_APP_ENV: production
     
     # Noir Circuit Tests
-    - name: Install Noir
-      run: npm install -g @noir-lang/noir
-    
-    - name: Verify Noir Installation
-      run: noir --version
+    - name: Install noirup and Nargo
+      run: |
+        curl -L https://raw.githubusercontent.com/noir-lang/noirup/main/install | bash
+        echo "$HOME/.nargo/bin" >> $GITHUB_PATH
+        noirup install stable # Installe la dernière version stable de nargo
+    - name: Verify Nargo Installation
+      run: nargo --version
     
     - name: Compile and Test Noir Circuits
       run: |

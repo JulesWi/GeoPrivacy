@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "test": "jest",
-    "noir:compile": "cd circuits && /root/.nargo/bin/nargo compile",
+    "noir:compile": "cd circuits && nargo compile",
     "noir:execute": "cd circuits && nargo execute",
     "noir:info": "cd circuits && nargo info"
   },
