@@ -1,18 +1,28 @@
 // Mock implementations for zero-knowledge proof testing
 // Removed direct dependencies on @noir-lang/noir_js and @aztec/bb.js
 
+interface MockProofInputs {
+  latitude: number;
+  longitude: number;
+  timestamp: number;
+}
+
+interface MockProof {
+  inputs: MockProofInputs;
+}
+
 // Mock verification logic for location proofs
 class MockZKBackend {
   static async new() {
     return new MockZKBackend();
   }
 
-  async generateProof(inputs: any) {
+  async generateProof(inputs: MockProofInputs): Promise<MockProof> {
     // Simple mock that just returns the inputs as the "proof"
     return { inputs };
   }
 
-  async verifyProof(proof: any) {
+  async verifyProof(proof: MockProof): Promise<boolean> {
     const { inputs } = proof;
     
     // Mock verification logic:
@@ -35,7 +45,7 @@ class MockZKBackend {
 }
 
 describe('Location Proof Circuit', () => {
-  let backend: any;
+  let backend: MockZKBackend;
 
   beforeAll(async () => {
     // Use mock backend instead of actual Barretenberg
