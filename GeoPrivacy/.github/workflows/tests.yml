@@ -12,19 +12,23 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Setup Node.js
+    - name: Setup Node.js for Frontend
       uses: actions/setup-node@v4
       with:
         node-version: '18.x'
         cache: 'npm'
+        cache-dependency-path: GeoPrivacy/frontend/package-lock.json
     
-    - name: Install Dependencies
+    - name: Install Frontend Dependencies
+      working-directory: ./GeoPrivacy/frontend
       run: npm ci
     
-    - name: Lint Code
+    - name: Lint Frontend Code
+      working-directory: ./GeoPrivacy/frontend
       run: npm run lint
     
-    - name: Run tests
+    - name: Run Frontend Tests
+      working-directory: ./GeoPrivacy/frontend
       run: npm test
 
     # Unit tests for frontend/backend will be added here later if needed
