@@ -12,18 +12,22 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Use Node.js
+    - name: Use Node.js for Frontend
       uses: actions/setup-node@v4
       with:
         node-version: '18.x'
+        cache: 'npm'
+        cache-dependency-path: GeoPrivacy/frontend/package-lock.json
     
-    - name: Install Dependencies
+    - name: Install Frontend Dependencies
+      working-directory: ./GeoPrivacy/frontend
       run: npm ci
     
-    - name: Run Tests
+    - name: Run Frontend Tests
+      working-directory: ./GeoPrivacy/frontend
       run: npm test
     
-    - name: Deploy to Vercel
+    - name: Deploy Frontend to Vercel
       uses: amondnet/vercel-action@v20
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -31,6 +35,7 @@ jobs:
         vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
         zeit-token: ${{ secrets.VERCEL_TOKEN }}
         github-comment: true
+        working-directory: ./GeoPrivacy/frontend
 
   notify_success:
     if: success()
