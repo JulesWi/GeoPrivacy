@@ -78,41 +78,13 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Compile contracts
-      run: npx hardhat compile
-    
-    - name: Run unit tests
-      run: npm run test:contracts
-    
-    - name: Generate coverage report
-      run: npm run test:contracts:coverage
+    - name: Run tests
+      run: npm test
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-    
-    - name: Gas reporter
-      run: npm run test:contracts:gas
-      env:
-        REPORT_GAS: true
 
-  security:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Run Slither
-      uses: crytic/slither-action@v0.3.0
-      with:
-        solc-version: 0.8.19
-        
-    - name: Setup Python for Security Scan
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
-    - name: Install MythX CLI for Security Scan
-      run: pip install mythx-cli
-    - name: Run MythX Security Scan
-      run: mythx analyze --ci --ci-format github-annotations --api-key ${{ secrets.MYTHX_API_KEY }} --solc-version 0.8.19 ./contracts
+  # Security job removed as it was focused on blockchain contracts
+  # New security checks can be added here in the future if needed

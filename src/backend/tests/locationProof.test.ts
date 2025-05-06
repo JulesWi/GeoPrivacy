@@ -1,4 +1,3 @@
-import { LocationProofService } from '../../services/LocationProofService';
 import { LocationProof } from '../models/LocationProof';
 
 // Mock the LocationProof model completely to avoid MongoDB connection issues
@@ -19,10 +18,21 @@ jest.mock('../models/LocationProof', () => {
     toString: () => 'test-user-id'
   });
 
-  // Mock constructor
+  // Mock constructor with all required properties
   const MockLocationProof = jest.fn().mockImplementation(() => ({
     save: mockSave,
-    user: { toString: () => 'test-user-id' }
+    _id: 'mock-id-123',
+    user: { toString: () => 'test-user-id' },
+    location: JSON.stringify({ latitude: 48.8566, longitude: 2.3522 }),
+    timestamp: new Date(),
+    proof: 'test_proof_data_hash',
+    zeroKnowledgeToken: 'test_zero_knowledge_token',
+    verificationRadius: 100,
+    centerLat: 48.8566,
+    centerLon: 2.3522,
+    proofTimestamp: new Date(),
+    expirationDate: new Date(Date.now() + 3600000),
+    isValid: true
   }));
 
   // Mock static methods
