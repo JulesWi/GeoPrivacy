@@ -41,20 +41,38 @@ router.post(
   '/create', 
   authenticateJWT,
   validateRequest(createProofSchema),
-  locationProofController.createProof
+  async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
+    try {
+      await locationProofController.createProof(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 
 router.get(
-  '/user', 
+  '/user',
   authenticateJWT,
-  locationProofController.getProofsByUser
+  async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
+    try {
+      await locationProofController.getProofsByUser(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 
 router.post(
-  '/nearby', 
+  '/nearby',
   authenticateJWT,
   validateRequest(nearbyProofsSchema),
-  locationProofController.findValidProofsNearby
+  async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
+    try {
+      await locationProofController.findValidProofsNearby(req, res, next);
+    } catch (error) {
+      next(error);
+    }
+  }
 );
 
 export default router;
