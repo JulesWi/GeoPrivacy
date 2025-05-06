@@ -39,6 +39,12 @@ export interface ILocationProofDocument extends mongoose.Document, ILocationProo
   timestamp: Date;
   proof: string;
   zeroKnowledgeToken: string;
+  paymentTransaction?: {
+    hash: string;
+    network: string;
+    amount: number;
+    token: string;
+  };
 }
 
 // Define the model type that includes methods
@@ -94,6 +100,17 @@ const LocationProofSchema = new mongoose.Schema({
   isValid: {
     type: Boolean,
     default: true
+  },
+  // Optional fields now added to schema based on ILocationProofDocument usage
+  user: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User' 
+  },
+  location: { // Storing as stringified JSON as per LocationProofService
+    type: String 
+  },
+  proof: { // The ZK proof string
+    type: String 
   },
   // Note: createdAt and updatedAt are handled by the timestamps option below
 }, {

@@ -2,7 +2,7 @@
 
 ## 🚀 Overview
 
-GeoPrivacy is an innovative web application that generates zero-knowledge proofs for location verification, ensuring maximum privacy and security.
+GeoPrivacy is an innovative web application that generates zero-knowledge proofs for location verification, ensuring maximum privacy and security. The application has been updated with improved TypeScript configuration and testing capabilities.
 
 ## ✨ Features
 
@@ -13,12 +13,27 @@ GeoPrivacy is an innovative web application that generates zero-knowledge proofs
 
 ## 🛠 Tech Stack
 
-- **Frontend**: Next.js 14
-- **Styling**: Tailwind CSS
+- **Frontend**: React 18 with TypeScript
+- **Styling**: Tailwind CSS with primary (light green) and secondary (light blue) colors
 - **Mapping**: React Leaflet
-- **Zero-Knowledge Proofs**: Noir Circuit
+- **Zero-Knowledge Proofs**: Noir Circuit and Aztec Network
+- **Testing**: Jest and React Testing Library
 
 ## 🌐 Getting Started
+
+```bash
+# Install dependencies
+npm install --legacy-peer-deps
+
+# Start frontend
+npm run start:frontend
+
+# Start backend
+npm run start:backend
+
+# Run tests
+npm test
+```
 
 ## 💰 Payment Model
 
@@ -43,6 +58,70 @@ GeoPrivacy introduces an innovative payment mechanism for Zero-Knowledge Proofs:
 ### Prerequisites
 
 - Node.js (v18+)
+- npm or yarn
+- React 18.x (for compatibility with react-leaflet)
+- TypeScript 5.x
+
+### Security and Testing
+
+#### Smart Contract Security
+- Comprehensive unit testing
+- Static code analysis
+- Gas optimization
+- Regular security audits
+
+#### Continuous Integration
+- Automated tests on every push and pull request
+- Code coverage reporting
+- Security vulnerability scanning
+- Vercel deployment with GitHub Actions
+  - Configured with VERCEL_TOKEN, VERCEL_ORG_ID, and VERCEL_PROJECT_ID secrets
+
+#### Test Commands
+```bash
+# Run all contract tests
+npm run test:contracts
+
+# Generate test coverage report
+npm run test:contracts:coverage
+
+# Analyze gas usage
+npm run test:contracts:gas
+```
+
+#### Security Best Practices
+- All sensitive data managed via environment variables
+- Private keys and API keys never committed to repository
+- Regular dependency updates
+- Implemented access control mechanisms
+
+### Smart Contract Deployment
+
+#### OP Sepolia Deployment
+
+1. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env and add:
+# OP_SEPOLIA_RPC_URL=https://sepolia.optimism.io
+# PRIVATE_KEY=your_private_key
+# OPTIMISM_ETHERSCAN_API_KEY=your_api_key
+```
+
+2. Deploy the contract:
+```bash
+npx hardhat run scripts/deploy.ts --network op-sepolia
+```
+
+3. Verify the contract (optional):
+```bash
+npx hardhat verify --network op-sepolia DEPLOYED_CONTRACT_ADDRESS
+```
+
+#### Deployment Details
+- **Network**: OP Sepolia
+- **Token Cost**: 0.5 USDC
+- **Smart Contract**: `GeoPrivacyPayment.sol`
 - npm
 
 ### Installation

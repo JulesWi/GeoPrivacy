@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { LocationProof } from '../models/LocationProof';
 import { authenticateJWT } from '../middleware/auth';
 
 export const locationProofController = {
-  async createProof(req: Request, res: Response) {
+  async createProof(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { location, timestamp, proof } = req.body;
       const userId = req.user?._id;
@@ -22,14 +22,12 @@ export const locationProofController = {
         proof: newProof
       });
     } catch (error: any) {
-      res.status(500).json({ 
-        message: 'Error creating location proof', 
-        error: error.message 
-      });
+      // Pass the error to the next error-handling middleware
+      next(error);
     }
   },
 
-  async getProofsByUser(req: Request, res: Response) {
+  async getProofsByUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user?._id;
       const proofs = await LocationProof.find({ user: userId });
@@ -39,14 +37,11 @@ export const locationProofController = {
         proofs
       });
     } catch (error: any) {
-      res.status(500).json({ 
-        message: 'Error retrieving location proofs', 
-        error: error.message 
-      });
+      next(error);
     }
   },
 
-  async findValidProofsNearby(req: Request, res: Response) {
+  async findValidProofsNearby(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { latitude, longitude, radius } = req.body;
 
@@ -61,10 +56,7 @@ export const locationProofController = {
         proofs: nearbyProofs
       });
     } catch (error: any) {
-      res.status(500).json({ 
-        message: 'Error finding nearby proofs', 
-        error: error.message 
-      });
+      next(error);
     }
   }
 };

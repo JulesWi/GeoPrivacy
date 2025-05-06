@@ -1,19 +1,20 @@
 import express from 'express';
-import { authController } from '../middleware/auth';
+import { authController } from '../controllers/authController';
 import Joi from 'joi';
 
 const router = express.Router();
 
 // Validation middleware
 const validateRequest = (schema: Joi.ObjectSchema) => {
-  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  return (req: express.Request, res: express.Response, next: express.NextFunction): void => {
     const { error } = schema.validate(req.body);
     
     if (error) {
-      return res.status(400).json({
+      res.status(400).json({
         message: 'Validation error',
         details: error.details.map(d => d.message)
       });
+      return;
     }
     
     next();
