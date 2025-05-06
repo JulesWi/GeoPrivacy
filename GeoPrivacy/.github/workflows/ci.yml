@@ -57,10 +57,14 @@ jobs:
     
     # Noir Circuit Tests
     - name: Install Noir
-      run: npm install -g @noir-lang/noir
+      run: |
+        curl -L https://raw.githubusercontent.com/noir-lang/noirup/main/install | bash
+        echo "$HOME/.nargo/bin" >> $GITHUB_PATH
+        noirup install
+        noirup default stable # Or specify a version like v0.28.0
     
     - name: Verify Noir Installation
-      run: noir --version
+      run: nargo --version
     
     - name: Compile and Test Noir Circuits
       run: |
