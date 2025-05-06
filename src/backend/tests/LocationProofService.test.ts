@@ -1,9 +1,9 @@
 import { LocationProofService } from '../../services/LocationProofService';
-import { PaymentService } from '../../services/PaymentService';
+// import { PaymentService } from '../../services/PaymentService';
 import { LocationProof } from '../models/LocationProof';
 
 // Mocks
-jest.mock('../../services/PaymentService');
+// jest.mock('../../services/PaymentService');
 jest.mock('../models/LocationProof', () => ({
   LocationProof: jest.fn().mockImplementation(() => ({
     save: jest.fn().mockResolvedValue(true)
@@ -12,17 +12,16 @@ jest.mock('../models/LocationProof', () => ({
 
 describe('LocationProofService', () => {
   let locationProofService: LocationProofService;
-  let mockPaymentService: jest.Mocked<PaymentService>;
 
   beforeEach(() => {
     locationProofService = new LocationProofService();
-    mockPaymentService = new PaymentService() as jest.Mocked<PaymentService>;
+    // mockPaymentService = new PaymentService() as jest.Mocked<PaymentService>; // Removed
     
-    // Configuration du mock PaymentService
-    mockPaymentService.verifyPayment = jest.fn().mockResolvedValue({
-      isValid: true,
-      transactionHash: 'mock_transaction_hash'
-    });
+    // Configuration du mock PaymentService - REMOVED
+    // mockPaymentService.verifyPayment = jest.fn().mockResolvedValue({
+    //   isValid: true,
+    //   transactionHash: 'mock_transaction_hash'
+    // });
   });
 
   describe('generateLocationProof', () => {
@@ -34,37 +33,37 @@ describe('LocationProofService', () => {
       }
     };
 
-    it('should generate location proof with valid payment', async () => {
+    it('should generate location proof', async () => { // Test updated, payment verification removed
       const result = await locationProofService.generateLocationProof(mockRequest);
       
-      expect(result).toBeTruthy();
-      expect(mockPaymentService.verifyPayment).toHaveBeenCalledWith(mockRequest.userId);
+      expect(result).toBeTruthy(); // Assuming it should still return a truthy value (the ZK proof string)
+      // expect(mockPaymentService.verifyPayment).toHaveBeenCalledWith(mockRequest.userId); // Removed
     });
 
-    it('should throw error for invalid payment', async () => {
-      // Configurer le mock pour un paiement invalide
-      mockPaymentService.verifyPayment = jest.fn().mockResolvedValue({
-        isValid: false
-      });
+    // it('should throw error for invalid payment', async () => { // ENTIRE TEST REMOVED
+    //   // Configurer le mock pour un paiement invalide
+    //   mockPaymentService.verifyPayment = jest.fn().mockResolvedValue({
+    //     isValid: false
+    //   });
 
-      await expect(
-        locationProofService.generateLocationProof(mockRequest)
-      ).rejects.toThrow('Payment verification failed');
-    });
+    //   await expect(
+    //     locationProofService.generateLocationProof(mockRequest)
+    //   ).rejects.toThrow('Payment verification failed');
+    // });
   });
 
-  describe('purchaseProofToken', () => {
-    it('should purchase proof token', async () => {
-      const mockPurchase = jest.fn().mockResolvedValue('purchase_tx_hash');
-      mockPaymentService.purchaseProofToken = mockPurchase;
+  // describe('purchaseProofToken', () => { // ENTIRE BLOCK REMOVED
+  //   it('should purchase proof token', async () => {
+  //     const mockPurchase = jest.fn().mockResolvedValue('purchase_tx_hash');
+  //     mockPaymentService.purchaseProofToken = mockPurchase;
 
-      const result = await locationProofService.purchaseProofToken(
-        '0x1234', 
-        'private_key'
-      );
+  //     const result = await locationProofService.purchaseProofToken(
+  //       '0x1234', 
+  //       'private_key'
+  //     );
 
-      expect(result).toBe('purchase_tx_hash');
-      expect(mockPurchase).toHaveBeenCalledWith('0x1234', 'private_key');
-    });
-  });
+  //     expect(result).toBe('purchase_tx_hash');
+  //     expect(mockPurchase).toHaveBeenCalledWith('0x1234', 'private_key');
+  //   });
+  // });
 });

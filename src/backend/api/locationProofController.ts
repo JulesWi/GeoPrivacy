@@ -1,17 +1,15 @@
 import { Request, Response } from 'express';
 import { GeolocationService, LocationProof } from '../../services/GeolocationService';
+import { LocationProofService } from '../../services/LocationProofService';
 import { CoordinateMarker } from '../../utils/CoordinateMarker';
-import { config } from '../../config/web3Config';
+// import { config } from '../../config/web3Config';
 
 export class LocationProofController {
   private geolocationService: GeolocationService;
-
-  constructor() {
-    this.geolocationService = new GeolocationService();
-  }
   private locationProofService: LocationProofService;
 
   constructor() {
+    this.geolocationService = new GeolocationService();
     this.locationProofService = new LocationProofService();
   }
 
@@ -20,7 +18,7 @@ export class LocationProofController {
     lon: number, 
     accuracy: number = 10,req: Request, res: Response) {
     try {
-      const { userId, location, paymentTransaction } = req.body;
+      const { userId, location /*, paymentTransaction */ } = req.body; // paymentTransaction removed
 
       // Générer la preuve de localisation
       const locationProof = this.geolocationService.generateLocationProof(
@@ -40,17 +38,14 @@ export class LocationProofController {
       const proof = await this.locationProofService.generateLocationProof({
         userId,
         location,
-        paymentTransaction
+        // paymentTransaction // Removed
       });
 
       if (!proof) {
-        return res.status(402).json({ 
-          error: 'Payment verification failed',
-          details: {
-            cost: config.proofCost.amount,
-            token: config.proofCost.token,
-            network: config.proofCost.network
-          }
+        // Original error referenced config.proofCost which is removed.
+        // Simplified error message.
+        return res.status(500).json({ 
+          error: 'Failed to generate location proof'
         });
       }
 
@@ -66,37 +61,37 @@ export class LocationProofController {
     }
   }
 
-  async purchaseProofToken(req: Request, res: Response) {
-    try {
-      const { userAddress, privateKey } = req.body;
+  // async purchaseProofToken(req: Request, res: Response) { // ENTIRE METHOD REMOVED
+  //   try {
+  //     const { userAddress, privateKey } = req.body;
 
-      if (!userAddress || !privateKey) {
-        return res.status(400).json({ 
-          error: 'User address and private key are required' 
-        });
-      }
+  //     if (!userAddress || !privateKey) {
+  //       return res.status(400).json({ 
+  //         error: 'User address and private key are required' 
+  //       });
+  //     }
 
-      const transactionHash = await this.locationProofService.purchaseProofToken(
-        userAddress, 
-        privateKey
-      );
+  //     const transactionHash = await this.locationProofService.purchaseProofToken(
+  //       userAddress, 
+  //       privateKey
+  //     );
 
-      if (!transactionHash) {
-        return res.status(402).json({ 
-          error: 'Token purchase failed',
-          details: config.proofCost
-        });
-      }
+  //     if (!transactionHash) {
+  //       return res.status(402).json({ 
+  //         error: 'Token purchase failed',
+  //         details: config.proofCost
+  //       });
+  //     }
 
-      res.status(200).json({ 
-        transactionHash,
-        message: 'Proof token purchased successfully' 
-      });
-    } catch (error) {
-      console.error('Token purchase error:', error);
-      res.status(500).json({ 
-        error: 'Internal server error during token purchase' 
-      });
-    }
-  }
+  //     res.status(200).json({ 
+  //       transactionHash,
+  //       message: 'Proof token purchased successfully' 
+  //     });
+  //   } catch (error) {
+  //     console.error('Token purchase error:', error);
+  //     res.status(500).json({ 
+  //       error: 'Internal server error during token purchase' 
+  //     });
+  //   }
+  // }
 }

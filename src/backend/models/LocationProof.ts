@@ -101,6 +101,17 @@ const LocationProofSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  // Optional fields now added to schema based on ILocationProofDocument usage
+  user: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User' 
+  },
+  location: { // Storing as stringified JSON as per LocationProofService
+    type: String 
+  },
+  proof: { // The ZK proof string
+    type: String 
+  },
   // Note: createdAt and updatedAt are handled by the timestamps option below
 }, {
   timestamps: true

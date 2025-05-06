@@ -1,4 +1,5 @@
-import { ethers } from 'ethers';
+// import { ethers } from 'ethers';
+import crypto from 'crypto'; // Added for potential Node.js crypto usage
 
 /**
  * Représentation avancée d'un marqueur de coordonnées géographiques
@@ -53,7 +54,11 @@ export class CoordinateMarker {
    */
   public generateHash(): string {
     const coordinateString = `${this.latitude},${this.longitude}`;
-    return ethers.keccak256(ethers.toUtf8Bytes(coordinateString));
+    // return ethers.keccak256(ethers.toUtf8Bytes(coordinateString));
+    // TODO: Implement hashing with Node.js crypto or a keccak256 library if needed
+    // For now, returning a simple SHA256 hash as an example, if keccak256 is not strictly required:
+    // return crypto.createHash('sha256').update(coordinateString).digest('hex');
+    throw new Error('Hashing function not fully implemented after removing ethers.js. Decide on keccak256 or other.');
   }
 
   /**

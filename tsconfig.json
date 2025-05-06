@@ -17,7 +17,8 @@
     "typeRoots": [
       "./node_modules/@types",
       "./src/@types"
-    ]
+    ],
+    "types": ["jest", "node"] // Explicitly include jest and node types
   },
   "include": [
     "src/**/*.ts",
@@ -25,8 +26,8 @@
   ],
   "exclude": [
     "node_modules",
-    "build",
-    "**/*.test.ts",
-    "**/*.test.tsx"
+    "build"
+    // "**/*.test.ts", // Allow IDE to process test files
+    // "**/*.test.tsx" // Allow IDE to process test files
   ]
 }

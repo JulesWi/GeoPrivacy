@@ -1,5 +1,6 @@
 import express from 'express';
 import { locationProofController } from '../controllers/locationProofController';
+import { LocationProof } from '../models/LocationProof';
 import { authenticateJWT } from '../middleware/auth';
 import Joi from 'joi';
 

@@ -12,10 +12,6 @@
     }
   ],
   "env": {
-    "OP_SEPOLIA_RPC_URL": "@op_sepolia_rpc_url",
-    "USDC_TOKEN_ADDRESS": "@usdc_token_address",
-    "PRIVATE_KEY": "@private_key",
-    "OPTIMISM_ETHERSCAN_API_KEY": "@optimism_etherscan_api_key",
     "NEXT_PUBLIC_APP_ENV": "production"
   },
   "routes": [

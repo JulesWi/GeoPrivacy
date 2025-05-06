@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { LocationProof, ILocationProof } from '../models/LocationProof';
+import { LocationProof, ILocationProofDocument, ILocationProofModel } from '../models/LocationProof';
 
 class DatabaseService {
   private mongoUri: string;
@@ -12,8 +12,6 @@ class DatabaseService {
   async connect(): Promise<void> {
     try {
       await mongoose.connect(this.mongoUri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
         serverSelectionTimeoutMS: 5000,
         retryWrites: true
       });
@@ -24,7 +22,7 @@ class DatabaseService {
     }
   }
 
-  async saveLocationProof(proofData: Partial<ILocationProof>): Promise<ILocationProof> {
+  async saveLocationProof(proofData: Partial<ILocationProofDocument>): Promise<ILocationProofDocument> {
     try {
       // Définir une durée de validité configurable
       const validityDuration = parseInt(process.env.PROOF_EXPIRATION_TIME || '3600', 10);
@@ -44,11 +42,12 @@ class DatabaseService {
     }
   }
 
-  async findValidLocationProof(token: string): Promise<ILocationProof | null> {
+  async findValidLocationProof(token: string): Promise<ILocationProofDocument | null> {
     try {
-      return await LocationProof.findValidProof(token);
+      // Trouver une preuve valide par son token
+      return await LocationProof.findOne({ zeroKnowledgeToken: token, isValid: true });
     } catch (error) {
-      console.error('Erreur lors de la recherche de la preuve:', error);
+      console.error('Erreur lors de la recherche de la preuve par token:', error);
       return null;
     }
   }

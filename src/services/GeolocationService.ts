@@ -1,5 +1,6 @@
 import { CoordinateMarker } from '../utils/CoordinateMarker';
-import { ethers } from 'ethers';
+// import { ethers } from 'ethers';
+import crypto from 'crypto'; // Added for potential Node.js crypto usage or JWT
 
 export interface LocationProof {
   latitude: number;
@@ -91,11 +92,12 @@ export class GeolocationService {
   public async createLocationToken(
     proof: LocationProof
   ): Promise<string> {
-    // Simuler la création d'un token signé
-    const wallet = ethers.Wallet.createRandom();
+    // Simuler la création d'un token signé - Ethereum wallet logic removed
+    // const wallet = ethers.Wallet.createRandom();
     const message = JSON.stringify(proof);
-    
-    return await wallet.signMessage(message);
+    // return await wallet.signMessage(message);
+    // TODO: Implement token creation/signing using Node.js crypto or JWT if needed
+    throw new Error('Token creation logic not fully implemented after removing ethers.js.');
   }
 }
 
