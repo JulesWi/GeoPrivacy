@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { sha3_256 } from 'js-sha3';
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
-import { LatLngExpression } from 'leaflet';
+import { type Icon as LeafletIconType, LatLngExpression } from 'leaflet';
 
 // Disable SSR for Leaflet components due to window object dependency
 const DynamicMapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), { ssr: false });
@@ -26,10 +26,21 @@ const LocationProofGenerator: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [customMarkerIcon, setCustomMarkerIcon] = useState<LeafletIconType | null>(null);
 
-  // Set isClient to true when component mounts
+  // Set isClient to true when component mounts and create custom icon
   useEffect(() => {
     setIsClient(true);
+    // Dynamically import LeafletIcon and define a custom SVG icon for the marker only on the client side
+    import('leaflet').then(L => {
+      const icon = new L.Icon({
+        iconUrl: 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="#FF0000"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>'),
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+      });
+      setCustomMarkerIcon(icon);
+    }).catch(err => console.error('Failed to load Leaflet Icon:', err));
   }, []);
 
   // Reset success message after 5 seconds
@@ -280,14 +291,20 @@ const LocationProofGenerator: React.FC = () => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   />
-                  <DynamicMarker position={mapCenter}>
-                    <DynamicPopup>
-                      <div className="text-center">
-                        <p className="font-semibold text-primary-dark">Location Verified</p>
-                        <p className="text-xs text-gray-600">{proof.region}</p>
-                      </div>
-                    </DynamicPopup>
-                  </DynamicMarker>
+                  {isClient && customMarkerIcon && proof && (
+                    <DynamicMarker position={mapCenter} icon={customMarkerIcon}>
+                      <DynamicPopup>
+                        <div className="text-center p-1">
+                          <p className="font-semibold text-primary-dark mb-2">Location Verified</p>
+                          <pre className="bg-gray-100 p-2 rounded text-xs text-left font-mono overflow-auto max-w-[200px] whitespace-pre-wrap">
+{`Region: ${proof.region || 'Unknown'}
+Radius: ~500m
+Generated: ${proof.timestamp ? proof.timestamp.toLocaleTimeString() : 'Unknown'}`}
+                          </pre>
+                        </div>
+                      </DynamicPopup>
+                    </DynamicMarker>
+                  )}
                 </DynamicMapContainer>
               ) : (
                 <div className="h-full w-full flex items-center justify-center bg-gray-100">
