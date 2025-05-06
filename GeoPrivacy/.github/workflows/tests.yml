@@ -8,7 +8,7 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  lint-and-test: # Test job for GeoPrivacy frontend # Test job for GeoPrivacy frontend
+  lint-and-test: # CI job for frontend linting and testing
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
